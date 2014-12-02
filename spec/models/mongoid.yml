@@ -1,0 +1,6 @@
+test:
+  sessions:
+    default:
+      hosts:
+        - localhost
+      database: quick-search-tests
