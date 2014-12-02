@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['fabio.david.batista@gmail.com']
   spec.summary       = %q{A quick search concern for ActiveRecord and Mongoid models}
   spec.description   = %q{This gem was extracted from Elementar projects.}
-  spec.homepage      = ''
+  spec.homepage      = 'https://github.com/elementar/quick-search'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files`.split($/)
@@ -18,14 +18,12 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'activesupport', '>= 4.0'
-
   spec.add_development_dependency 'bundler', '< 2.0'
-  spec.add_development_dependency 'rake'
+  spec.add_development_dependency 'rake', '~> 10'
   spec.add_development_dependency 'rspec', '~> 3.1'
 
-  spec.add_development_dependency 'activerecord', '~> 4.0.0'
-  spec.add_development_dependency 'sqlite3'
+  spec.add_development_dependency 'activerecord', '~> 4.0'
+  spec.add_development_dependency 'sqlite3', '~> 1.3'
 
-  spec.add_development_dependency 'mongoid', '~> 4.0.0'
+  spec.add_development_dependency 'mongoid', '~> 4.0'
 end
