@@ -8,3 +8,10 @@ rvm:
   - ruby-head
   - jruby-head
   - ree
+services:
+  - mongodb
+before_script:
+  - mysql -e 'create database quicksearch_test;'
+env:
+  - DATABASE_URL="sqlite3::memory"
+  - DATABASE_URL="mysql2://root@localhost/quicksearch_test"
