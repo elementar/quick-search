@@ -1,12 +1,17 @@
 module QuickSearch
   module Adapters
     class MongoidAdapter
-      def initialize(cls)
+      def initialize(cls, fields)
         @cls = cls
+        @fields = fields || default_quick_search_fields
       end
 
-      def make_clauses_for_token(s, token, fields)
-        s.and '$or' => fields.map { |f| { to_field_name(f) => /#{Regexp.escape token}/i } }
+      def prepare_relation(relation)
+        relation
+      end
+
+      def make_clauses_for_token(relation, token)
+        relation.and '$or' => @fields.map { |f| { to_field_name(f) => /#{Regexp.escape token}/i } }
       end
 
       def default_quick_search_fields

@@ -18,11 +18,12 @@ module QuickSearch
       (@quick_search_expressions ||= {})[rx] = proc
     end
 
-    # Performs a quick search. Returns the used tokens in the second parameter.
-    def quick_search(search, tokens_array = [])
-      adapter # fail fast, if the adapter can not be created
+    # Performs a quick search.
+    def quick_search(search)
+      adapter = create_adapter # fail fast, if the adapter can not be created
 
-      relation = all
+      relation = adapter.prepare_relation(all)
+
       (search || '').split(/\s+/).each do |token|
         next unless token.present?
 
@@ -31,28 +32,27 @@ module QuickSearch
           next
         end
 
-        @quick_search_fields ||= adapter.default_quick_search_fields
-        tokens_array << token
-
-        relation = adapter.make_clauses_for_token(relation, token, @quick_search_fields)
+        relation = adapter.make_clauses_for_token(relation, token)
       end
       relation
     end
 
     private
 
-    def adapter
-      @adapter ||= begin
+    def create_adapter
+      @adapter_class ||= begin
         if defined?(ActiveRecord) && defined?(ActiveRecord::Base) && self < ActiveRecord::Base
           require 'quick-search/adapters/active_record_adapter'
-          Adapters::ActiveRecordAdapter.new(self)
+          Adapters::ActiveRecordAdapter
         elsif defined?(Mongoid) && defined?(Mongoid::Document) && self < Mongoid::Document
           require 'quick-search/adapters/mongoid_adapter'
-          Adapters::MongoidAdapter.new(self)
+          Adapters::MongoidAdapter
         else
           raise UnsupportedAdapter.new self.name
         end
       end
+
+      @adapter_class.new(self, @quick_search_fields)
     end
 
     # Evaluates the expressions defined by #quick_search_expression.

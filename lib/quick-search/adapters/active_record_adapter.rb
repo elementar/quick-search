@@ -1,15 +1,22 @@
 module QuickSearch
   module Adapters
     class ActiveRecordAdapter
-      def initialize(cls)
+      def initialize(cls, fields)
         @cls = cls
+        @fields = fields || default_quick_search_fields
       end
 
-      def make_clauses_for_token(s, token, fields)
-        s = s.joins calculate_needed_joins(fields)
-        s = s.where build_parameterized_condition(fields, :s),
-                    s: "%#{token}%"
-        s
+      def prepare_relation(relation)
+        if joins = calculate_needed_joins(@fields)
+          relation.joins(joins)
+        else
+          relation
+        end
+      end
+
+      def make_clauses_for_token(relation, token)
+        relation.where build_parameterized_condition(@fields, :s),
+                       s: "%#{token}%"
       end
 
       def default_quick_search_fields
