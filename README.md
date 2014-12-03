@@ -2,6 +2,8 @@
 
 A quick search concern for ActiveRecord and Mongoid models.
 
+[![Build Status](https://travis-ci.org/elementar/quick-search.svg?branch=master)](https://travis-ci.org/elementar/quick-search)
+
 ## Installation
 
 Add this line to your application's Gemfile:
